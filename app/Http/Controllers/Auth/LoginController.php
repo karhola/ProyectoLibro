@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use Illuminate\Support\Facades\Auth;
+use Socialite;
+use App\User;
 class LoginController extends Controller
 {
     /*
@@ -17,6 +19,8 @@ class LoginController extends Controller
     | to conveniently provide its functionality to your applications.
     |
     */
+ 
+
 
     use AuthenticatesUsers;
 
@@ -25,7 +29,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/cliente';
 
     /**
      * Create a new controller instance.
@@ -36,4 +40,31 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    public function redirectToProvider()
+    {
+        return Socialite::driver('github')->redirect();
+    }
+  
+    public function handleProviderCallback()
+    {
+        $usersocial = Socialite::driver('github')->user();        
+        $finduser = User::where('email', $usersocial->email)->first();
+        if($finduser)
+        {
+            Auth::login($finduser);
+            return redirect('/cliente');
+        }
+        else
+        {
+            $user = new User();
+            $user->name = $usersocial->nickname;
+            $user->email = $usersocial->email;
+            $user->password = 123456;
+            $user->save();
+            Auth::login($user);
+            return redirect('/cliente');
+        }
+    }
+
+
 }

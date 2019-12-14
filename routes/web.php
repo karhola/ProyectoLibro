@@ -12,8 +12,25 @@
 */
 
 Route::get('/', function () {
-    return view('layout/layout');
+    return view('welcome');
 });
+
+Route::get('/juego', function () {
+    return view('juego.index');
+});
+Auth::routes();
+
 Route::resource('/cliente', 'ClienteController');
 Route::resource('/autor', 'AutorController');
-Auth::routes();
+Route::resource('/libro', 'LibroController');
+Route::resource('/orden', 'OrdenController');
+
+Route::resource('/orden_detalle', 'OrdenDetalleController');
+Route::get('login/github', 'Auth\LoginController@redirectToProvider');
+Route::get('login/github/callback', 'Auth\LoginController@handleProviderCallback');
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+
+
+

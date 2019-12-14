@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Libro;
+use App\Autor;
+
 use Illuminate\Http\Request;
 
 class LibroController extends Controller
@@ -14,7 +16,8 @@ class LibroController extends Controller
      */
     public function index()
     {
-        //
+        $datos = libro::all();
+        return view('libro.index', compact('datos'));
     }
 
     /**
@@ -24,7 +27,8 @@ class LibroController extends Controller
      */
     public function create()
     {
-        //
+        $datos = Autor::all();
+        return view('libro.create', compact('datos'));
     }
 
     /**
@@ -34,8 +38,13 @@ class LibroController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {        
+        $datos = new Libro();
+        $datos->autor_id = $request->autor;
+        $datos->titulo = $request->titulo;
+        $datos->precio = $request->precio;
+        $datos->save();  
+        return redirect('/libro');
     }
 
     /**
@@ -46,7 +55,7 @@ class LibroController extends Controller
      */
     public function show(Libro $libro)
     {
-        //
+        return view('libro.show', compact('libro'));  
     }
 
     /**
@@ -57,7 +66,9 @@ class LibroController extends Controller
      */
     public function edit(Libro $libro)
     {
-        //
+        //return "hoal";
+        return view('libro.edit', compact('libro'));
+        
     }
 
     /**
@@ -69,7 +80,12 @@ class LibroController extends Controller
      */
     public function update(Request $request, Libro $libro)
     {
-        //
+        $libro->titulo =$request->titulo;
+        $libro->autor_id =$request->autor_id;
+        $libro->precio =$request->precio;
+        $libro->update();
+        $datos = Libro::all();
+        return view('libro.index',compact('datos'));
     }
 
     /**
@@ -80,6 +96,8 @@ class LibroController extends Controller
      */
     public function destroy(Libro $libro)
     {
-        //
+        $libro->delete();    
+        $datos = Libro::all();
+        return view('libro.index',compact('datos'));
     }
 }

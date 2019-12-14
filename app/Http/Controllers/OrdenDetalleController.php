@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\OrdenDetalle;
+use App\Orden;
+use App\Libro;
 use Illuminate\Http\Request;
+
+
 
 class OrdenDetalleController extends Controller
 {
@@ -14,7 +18,9 @@ class OrdenDetalleController extends Controller
      */
     public function index()
     {
-        //
+        
+        $datos = OrdenDetalle::all();
+        return view('orden_detalle.index', compact('datos'));
     }
 
     /**
@@ -24,7 +30,9 @@ class OrdenDetalleController extends Controller
      */
     public function create()
     {
-        //
+        $datos = Orden::all();
+        $datos1 = Libro::all();
+        return view('orden_detalle.create', compact('datos','datos1'));
     }
 
     /**
@@ -35,7 +43,16 @@ class OrdenDetalleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       
+        $datos = new OrdenDetalle();
+        $datos->orden_id = $request->orden;
+        $datos->libro_id = $request->libro;
+        $datos->cantidad = $request->cantidad;
+        $datos->precio_orden = $request->precio_orden;
+        $datos->total = $request->total;
+        $datos->save();  
+        return redirect('/orden_detalle');
+        //return view('orden_detalle.mensaje',compact('datos'));
     }
 
     /**

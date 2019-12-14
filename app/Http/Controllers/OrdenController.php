@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Orden;
+use App\Cliente;
 use Illuminate\Http\Request;
 
 class OrdenController extends Controller
@@ -14,7 +15,8 @@ class OrdenController extends Controller
      */
     public function index()
     {
-        //
+        $datos = orden::all();
+        return view('orden.index', compact('datos'));
     }
 
     /**
@@ -24,7 +26,8 @@ class OrdenController extends Controller
      */
     public function create()
     {
-        //
+        $datos = Cliente::all();
+        return view('orden.create', compact('datos'));
     }
 
     /**
@@ -35,7 +38,12 @@ class OrdenController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $datos = new Orden();
+        $datos->cliente_id = $request->cliente;
+        $datos->fecha = $request->fecha;
+        $datos->tipo_pago = $request->tipo_pago;
+        $datos->save();  
+        return redirect('/orden');
     }
 
     /**
@@ -46,7 +54,7 @@ class OrdenController extends Controller
      */
     public function show(Orden $orden)
     {
-        //
+        return view('orden.show', compact('orden'));  
     }
 
     /**
@@ -57,7 +65,7 @@ class OrdenController extends Controller
      */
     public function edit(Orden $orden)
     {
-        //
+        return view('orden.edit', compact('orden'));
     }
 
     /**
@@ -69,7 +77,12 @@ class OrdenController extends Controller
      */
     public function update(Request $request, Orden $orden)
     {
-        //
+        $orden->fecha =$request->fecha;
+        $orden->cliente_id =$request->cliente_id;
+        $orden->tipo_pago =$request->tipo_pago;
+        $orden->update();
+        $datos = Orden::all();
+        return view('orden.index',compact('datos'));
     }
 
     /**
@@ -80,6 +93,8 @@ class OrdenController extends Controller
      */
     public function destroy(Orden $orden)
     {
-        //
+        $orden->delete();    
+        $datos = Orden::all();
+        return view('orden.index',compact('datos'));
     }
 }
